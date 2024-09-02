@@ -90,13 +90,13 @@
 
   <div class="circle_div">
     <div class="circle_small">
-      <div ref="circle_red" class="circle_red"></div>
+      <div ref="circleRedDiv" class="circle_red"></div>
     </div>
     <div class="line"></div>
     <div class="circle_big"></div>
     <div class="line"></div>
     <div class="circle_small">
-      <div ref="circle_blue" class="circle_blue"></div>
+      <div ref="circleBlueDiv" class="circle_blue"></div>
     </div>
   </div>
   <div class="heading">
@@ -178,88 +178,61 @@ export default {
     requestAnimationFrame(raf);
 
     // Access the elements using refs
-    const redDiv = this.$refs.circle_red;
-    const blueDiv = this.$refs.circle_blue;
-    const purpleDiv = this.$refs.circle_purple;
+    const redCircleDiv = this.$refs.circleRedDiv;
+    const blueCircleDiv = this.$refs.circleBlueDiv;
+    const purpleCircleDiv = this.$refs.circlePurpleDiv;
+
+    const redDotDiv = this.$refs.circle_red;
+    const blueDotDiv = this.$refs.circle_blue;
+    const purpleDotDiv = this.$refs.circle_purple;
 
     const movingRedCircle = this.$refs.redCircle;
     const movingBlueCircle = this.$refs.blueCircle;
     const movingPurpleCircle = this.$refs.purpleCircle;
 
-    // Set the divs to have a transparent background color by default
-    gsap.set([redDiv, blueDiv, purpleDiv], { backgroundColor: 'transparent' });
+    // Set all target elements to transparent background initially
+    gsap.set([redCircleDiv, blueCircleDiv, purpleCircleDiv, redDotDiv, blueDotDiv, purpleDotDiv], {
+      backgroundColor: 'transparent',
+    });
 
-    // Function to get the absolute position of an element
-    const getPosition = (element) => {
-      const rect = element.getBoundingClientRect();
-      return {
-        x: rect.left + window.scrollX,
-        y: rect.top + window.scrollY,
-      };
-    };
-
-    // Create an animation for each circle
+    // Function to animate circle matching
     const createAnimation = (movingCircle, targetDiv, color) => {
-      gsap.to(movingCircle, {
-        x: () => getPosition(targetDiv).x - getPosition(movingCircle).x + (targetDiv.offsetWidth / 2) - (movingCircle.offsetWidth / 2),
-        y: () => getPosition(targetDiv).y - getPosition(movingCircle).y + (targetDiv.offsetHeight / 2) - (movingCircle.offsetHeight / 2),
-        scrollTrigger: {
-          trigger: targetDiv,
-          start: 'top 80%',
-          end: 'top 20%',
-          scrub: true,
-          onEnter: () => {
-            gsap.to(targetDiv, { backgroundColor: color, duration: 0.5 });
-            gsap.to(movingCircle, { opacity: 0, duration: 0.5 });
-          },
-          onLeave: () => {
-            gsap.to(targetDiv, { backgroundColor: 'transparent', delay: 0.5, duration: 0.5 });
-            gsap.to(movingCircle, { opacity: 1, duration: 0.5 });
-          },
-          onEnterBack: () => {
-            gsap.to(targetDiv, { backgroundColor: color, duration: 0.5 });
-            gsap.to(movingCircle, { opacity: 0, duration: 0.5 });
-          },
-          onLeaveBack: () => {
-            gsap.to(targetDiv, { backgroundColor: 'transparent', delay: 0.5, duration: 0.5 });
-            gsap.to(movingCircle, { opacity: 1, duration: 0.5 });
-          },
-          markers: true, // Optional: Add markers to debug
+      ScrollTrigger.create({
+        trigger: targetDiv,
+        start: 'top 80%',
+        end: 'top 20%',
+        scrub: true,
+        onEnter: () => {
+          gsap.to(targetDiv, { backgroundColor: color, duration: 0.5 });
+          gsap.to(movingCircle, { opacity: 0, duration: 0.5 });
+        },
+        onLeave: () => {
+          gsap.to(targetDiv, { backgroundColor: 'transparent', duration: 0.5 });
+          gsap.to(movingCircle, { opacity: 1, duration: 0.5 });
+        },
+        onEnterBack: () => {
+          gsap.to(targetDiv, { backgroundColor: color, duration: 0.5 });
+          gsap.to(movingCircle, { opacity: 0, duration: 0.5 });
+        },
+        onLeaveBack: () => {
+          gsap.to(targetDiv, { backgroundColor: 'transparent', duration: 0.5 });
+          gsap.to(movingCircle, { opacity: 1, duration: 0.5 });
         },
       });
     };
 
-    // Create animations for each circle and div
-    createAnimation(movingRedCircle, redDiv, '#FB5457');
-    createAnimation(movingBlueCircle, blueDiv, '#5857F9');
-    createAnimation(movingPurpleCircle, purpleDiv, '#9C34F0');
+    // Apply animations for circle divs and dot divs
+    createAnimation(movingRedCircle, redCircleDiv, '#FB5457');
+    createAnimation(movingBlueCircle, blueCircleDiv, '#5857F9');
+    createAnimation(movingPurpleCircle, purpleCircleDiv, '#9C34F0');
 
-    // Additional logic for circle_div matching color divs
-    const circleDivs = document.querySelectorAll('.circle_div .circle_small > div');
-    circleDivs.forEach((circleDiv, index) => {
-      let movingCircle, color;
-
-      if (circleDiv === redDiv) {
-        movingCircle = movingRedCircle;
-        color = '#FB5457';
-      } else if (circleDiv === blueDiv) {
-        movingCircle = movingBlueCircle;
-        color = '#5857F9';
-      } else if (circleDiv === purpleDiv) {
-        movingCircle = movingPurpleCircle;
-        color = '#9C34F0';
-      }
-
-      if (movingCircle && color) {
-        createAnimation(movingCircle, circleDiv, color);
-      }
-    });
+    createAnimation(movingRedCircle, redDotDiv, '#FB5457');
+    createAnimation(movingBlueCircle, blueDotDiv, '#5857F9');
+    createAnimation(movingPurpleCircle, purpleDotDiv, '#9C34F0');
   },
 };
-
-
-
 </script>
+
 
 
 
