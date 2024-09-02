@@ -11,5 +11,16 @@
 <script >
 import { gsap } from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
-  import Lenis from "@studio-freight/lenis";
+  export default {
+    name: "App",
+    components: {
+      Home: () => import("./components/Home.vue"),
+      DummyComponent: () => import("./components/DummyComponent.vue"),
+      // DummyComponentII: () => import("./components/DummyComponentII.vue"),
+    },
+    mounted() {
+      gsap.registerPlugin(ScrollTrigger);
+      
+    },
+  };
 </script>
